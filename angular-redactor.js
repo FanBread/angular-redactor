@@ -31,7 +31,9 @@
                             });
                         },
                         options = {
-                            changeCallback: updateModel
+                          callbacks: {
+                            change: updateModel
+                          }
                         },
                         additionalOptions = attrs.redactor ?
                             scope.$eval(attrs.redactor) : {},
@@ -39,12 +41,16 @@
 
                     angular.extend(options, redactorOptions, additionalOptions);
 
-                    // prevent collision with the constant values on ChangeCallback
-                    var changeCallback = additionalOptions.changeCallback || redactorOptions.changeCallback;
+                    // prevent collision with the constant values on callbacks.change
+                    var changeCallback = additionalOptions.callbacks.change || redactorOptions.callbacks.change;
                     if (changeCallback) {
-                        options.changeCallback = function(value) {
-                            updateModel.call(this, value);
-                            changeCallback.call(this, value);
+                        options = {
+                            callbacks: {
+                              change: function(value) {
+                                  updateModel.call(this, value);
+                                  changeCallback.call(this, value);
+                              }
+                            }
                         }
                     }
 
@@ -63,7 +69,7 @@
                         if(angular.isDefined(editor)) {
                             $timeout(function() {
                                 element.redactor('code.set', ngModel.$viewValue || '');
-                                element.redactor('placeholder.toggle');
+                                element.redactor('placeholder.hide');
                                 scope.redactorLoaded = true;
                             });
                         }
