@@ -42,13 +42,13 @@
                     angular.extend(options, redactorOptions, additionalOptions);
 
                     // prevent collision with the constant values on callbacks.change
-                    var changeCallback = additionalOptions.callbacks.change || redactorOptions.callbacks.change;
-                    if (changeCallback) {
+                    var callbacks = additionalOptions.callbacks || redactorOptions.callbacks;
+                    if (callbacks && callbacks.change) {
                         options = {
                             callbacks: {
                               change: function(value) {
                                   updateModel.call(this, value);
-                                  changeCallback.call(this, value);
+                                  callbacks.change.call(this, value);
                               }
                             }
                         }
