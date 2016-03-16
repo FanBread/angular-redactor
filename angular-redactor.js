@@ -30,10 +30,9 @@
                                 });
                             });
                         },
-                        options = {
-                          callbacks: {
+                        options = {},
+                        defaultCallbacks = {
                             change: updateModel
-                          }
                         },
                         additionalOptions = attrs.redactor ?
                             scope.$eval(attrs.redactor) : {},
@@ -43,15 +42,18 @@
 
                     // prevent collision with the constant values on callbacks.change
                     var callbacks = additionalOptions.callbacks || redactorOptions.callbacks;
-                    if (callbacks && callbacks.change) {
-                        options = {
-                            callbacks: {
-                              change: function(value) {
-                                  updateModel.call(this, value);
-                                  callbacks.change.call(this, value);
-                              }
+                    if (callbacks) {
+                        if(callbacks.change) {
+                            options = {
+                                callbacks: {
+                                  change: function(value) {
+                                      updateModel.call(this, value);
+                                      callbacks.change.call(this, value);
+                                  }
+                                }
                             }
                         }
+                        angular.extend(options.callbacks, defaultCallbacks, redactorOptions.callbacks, additionalOptions.callbacks);
                     }
 
                     // put in timeout to avoid $digest collision.  call render() to
