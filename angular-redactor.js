@@ -30,15 +30,13 @@
                                 });
                             });
                         },
-                        options = {},
                         defaultCallbacks = {
                             change: updateModel
                         },
                         additionalOptions = attrs.redactor ?
                             scope.$eval(attrs.redactor) : {},
-                        editor;
-
-                    angular.extend(options, redactorOptions, additionalOptions);
+                        editor,
+                        options = angular.extend({}, redactorOptions, additionalOptions);
 
                     // prevent collision with the constant values on callbacks.change
                     var callbacks = additionalOptions.callbacks || redactorOptions.callbacks;
@@ -53,7 +51,7 @@
                                 }
                             }
                         }
-                        angular.extend(options.callbacks, defaultCallbacks, redactorOptions.callbacks, additionalOptions.callbacks);
+                        options.callbacks = angular.extend({}, defaultCallbacks, redactorOptions.callbacks, additionalOptions.callbacks);
                     }
 
                     // put in timeout to avoid $digest collision.  call render() to
