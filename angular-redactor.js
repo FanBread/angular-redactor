@@ -70,6 +70,12 @@
                             $timeout(function() {
                                 element.redactor('code.set', ngModel.$viewValue || '');
                                 element.redactor('placeholder.hide');
+
+                                // enable link & image editing after initial
+                                // load of content into the editor
+                                element.redactor('observe.images');
+                                element.redactor('observe.links');
+
                                 scope.redactorLoaded = true;
                             });
                         }
